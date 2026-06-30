@@ -1,0 +1,22 @@
+/* Tagged blocks align to their detected base direction:
+   `start` = right when the block is RTL, left when LTR. Only touches
+   elements content.js marked with dir="auto", so nothing else moves. */
+[dir="auto"] {
+  text-align: start;
+}
+
+/* Keep code blocks LTR and left-aligned even when they sit inside a
+   tagged (RTL) ancestor that would otherwise pass text-align: start down.
+   Inline <code> (not inside <pre>) is intentionally left alone so the
+   BiDi algorithm places it correctly within the surrounding Persian run. */
+pre,
+pre code {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: normal;
+}
+
+/* Reinforce per-paragraph base direction while typing in the input box. */
+[contenteditable="true"][dir="auto"] {
+  unicode-bidi: plaintext;
+}

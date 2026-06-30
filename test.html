@@ -1,0 +1,50 @@
+<!doctype html>
+<!--
+  Offline self-check. NOT part of the extension (not referenced by manifest.json).
+  Open this file directly in a browser: every line below should read PASS (green).
+  Delete it whenever you like.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Claude RTL Fix — self-check</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <p id="fa">سلام دنیا</p>
+  <p id="mixed">من از React و Node.js استفاده می‌کنم.</p>
+  <p id="en">Hello world</p>
+  <li id="liFa">یک مورد فهرست فارسی</li>
+  <blockquote id="bqEn">A plain English quote.</blockquote>
+  <pre id="pre"><code>const x = 1; // یک نظر فارسی داخل کد</code></pre>
+  <p id="inlineCode">من از <code>useState</code> استفاده می‌کنم.</p>
+  <div contenteditable="true" id="editor"><p>تایپ فارسی</p></div>
+
+  <hr />
+  <div id="results"></div>
+
+  <!-- content.js runs applyDir(document.body) on load, so the static DOM
+       above is already tagged by the time the assertions below run. -->
+  <script src="content.js"></script>
+  <script>
+    function assert(name, cond) {
+      const row = document.createElement("div");
+      row.textContent = (cond ? "PASS  " : "FAIL  ") + name;
+      row.style.color = cond ? "green" : "red";
+      document.getElementById("results").appendChild(row);
+      (cond ? console.log : console.error)((cond ? "PASS" : "FAIL") + ": " + name);
+    }
+    const $ = (id) => document.getElementById(id);
+
+    assert("Persian paragraph tagged", $("fa").dir === "auto");
+    assert("Mixed Persian/English paragraph tagged", $("mixed").dir === "auto");
+    assert("Persian list item tagged", $("liFa").dir === "auto");
+    assert("Paragraph with inline code tagged", $("inlineCode").dir === "auto");
+    assert("English paragraph NOT tagged", $("en").dir !== "auto");
+    assert("English blockquote NOT tagged", $("bqEn").dir !== "auto");
+    assert("Code block left untouched", $("pre").dir !== "auto");
+    assert("Inline <code> not direction-changed", $("inlineCode").querySelector("code").dir !== "auto");
+    assert("Input editor tagged dir=auto", $("editor").dir === "auto");
+  </script>
+</body>
+</html>
