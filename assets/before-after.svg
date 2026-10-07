@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="360" viewBox="0 0 880 360" role="img" aria-label="Persian text in Claude: scrambled and left-aligned before, correct and right-aligned with Claude RTL">
+<foreignObject x="0" y="0" width="880" height="360">
+<div xmlns="http://www.w3.org/1999/xhtml" class="root">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.root { width: 880px; height: 360px; border-radius: 14px; overflow: hidden; background: #0d1117;
+        border: 1px solid #30363d; color: #e6edf3; font: 15px/1.5 Inter, 'Segoe UI', -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; }
+
+.head { display: flex; align-items: baseline; gap: 14px; padding: 20px 26px 4px; }
+.head h1 { font-size: 26px; font-weight: 800; letter-spacing: -.5px; }
+.head span { color: #8b949e; font: 14px 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; }
+.cols { display: flex; gap: 18px; padding: 14px 26px 22px; }
+.col { flex: 1; background: #161b22; border: 1px solid #30363d; border-radius: 12px; padding: 14px 18px 16px; }
+.tag { display: inline-block; font: 600 12px 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
+.bad .tag { color: #ff7b72; background: rgba(248,81,73,.12); }
+.good .tag { color: #3fb950; background: rgba(63,185,80,.12); }
+.b { font: 17px/1.75 Vazirmatn, 'Noto Sans Arabic', 'Segoe UI', Tahoma, 'Geeza Pro', sans-serif; text-align: start; }
+.bad .b { text-align: left; }
+.li::before { content: "• "; color: #8b949e; }
+pre { margin-top: 8px; font: 13px 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; color: #a5d6ff; background: #0d1117; border: 1px solid #30363d;
+       border-radius: 8px; padding: 6px 10px; direction: ltr; text-align: left; }
+
+</style>
+<div class="head"><h1>Claude RTL</h1><span>one attribute: dir="auto"</span></div>
+<div class="cols">
+  <div class="col bad"><div class="tag">✕ claude.ai today</div><div class="b p" dir="ltr">من از React و Node.js استفاده می‌کنم.</div><div class="b p" dir="ltr">نسخهٔ ۲.۵ امروز منتشر شد!</div><div class="b li" dir="ltr">پشتیبانی کامل از فارسی و عربی</div><div class="b p" dir="ltr">English paragraphs stay left-to-right.</div><pre>npm install &amp;&amp; npm test</pre></div>
+  <div class="col good"><div class="tag">✓ with Claude RTL</div><div class="b p" dir="auto">من از React و Node.js استفاده می‌کنم.</div><div class="b p" dir="auto">نسخهٔ ۲.۵ امروز منتشر شد!</div><div class="b li" dir="auto">پشتیبانی کامل از فارسی و عربی</div><div class="b p" dir="auto">English paragraphs stay left-to-right.</div><pre>npm install &amp;&amp; npm test</pre></div>
+</div>
+</div>
+</foreignObject>
+</svg>
