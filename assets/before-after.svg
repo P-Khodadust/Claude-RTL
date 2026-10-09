@@ -21,10 +21,10 @@ pre { margin-top: 8px; font: 13px 'JetBrains Mono', ui-monospace, SFMono-Regular
        border-radius: 8px; padding: 6px 10px; direction: ltr; text-align: left; }
 
 </style>
-<div class="head"><h1>Claude RTL</h1><span>one attribute: dir="auto"</span></div>
+<div class="head"><h1>Claude RTL</h1><span>one attribute: dir="rtl"</span></div>
 <div class="cols">
   <div class="col bad"><div class="tag">✕ claude.ai today</div><div class="b p" dir="ltr">من از React و Node.js استفاده می‌کنم.</div><div class="b p" dir="ltr">نسخهٔ ۲.۵ امروز منتشر شد!</div><div class="b li" dir="ltr">پشتیبانی کامل از فارسی و عربی</div><div class="b p" dir="ltr">English paragraphs stay left-to-right.</div><pre>npm install &amp;&amp; npm test</pre></div>
-  <div class="col good"><div class="tag">✓ with Claude RTL</div><div class="b p" dir="auto">من از React و Node.js استفاده می‌کنم.</div><div class="b p" dir="auto">نسخهٔ ۲.۵ امروز منتشر شد!</div><div class="b li" dir="auto">پشتیبانی کامل از فارسی و عربی</div><div class="b p" dir="auto">English paragraphs stay left-to-right.</div><pre>npm install &amp;&amp; npm test</pre></div>
+  <div class="col good"><div class="tag">✓ with Claude RTL</div><div class="b p" dir="rtl">من از React و Node.js استفاده می‌کنم.</div><div class="b p" dir="rtl">نسخهٔ ۲.۵ امروز منتشر شد!</div><div class="b li" dir="rtl">پشتیبانی کامل از فارسی و عربی</div><div class="b p">English paragraphs stay left-to-right.</div><pre>npm install &amp;&amp; npm test</pre></div>
 </div>
 </div>
 </foreignObject>

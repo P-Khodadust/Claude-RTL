@@ -1,22 +1,22 @@
-/* Tagged blocks align to their detected base direction:
-   `start` = right when the block is RTL, left when LTR. Only touches
-   elements content.js marked with dir="auto", so nothing else moves. */
-[dir="auto"] {
+/* Blocks content.js marked RTL align right, even under an ancestor that
+   hard-codes text-align: left. LTR blocks inherit `start` and stay left. */
+[dir="rtl"] {
   text-align: start;
 }
 
+/* Inline code is an LTR island inside RTL text. Isolating it keeps the
+   punctuation at its edges in place: without this, `useState()` shows as
+   `()useState` and `--force` as `force--`. */
+code {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 /* Keep code blocks LTR and left-aligned even when they sit inside a
-   tagged (RTL) ancestor that would otherwise pass text-align: start down.
-   Inline <code> (not inside <pre>) is intentionally left alone so the
-   BiDi algorithm places it correctly within the surrounding Persian run. */
+   tagged (RTL) ancestor that would otherwise pass text-align: start down. */
 pre,
 pre code {
   direction: ltr;
   text-align: left;
   unicode-bidi: normal;
-}
-
-/* Reinforce per-paragraph base direction while typing in the input box. */
-[contenteditable="true"][dir="auto"] {
-  unicode-bidi: plaintext;
 }
