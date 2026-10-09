@@ -13,16 +13,40 @@
 <body>
   <p id="fa">سلام دنیا</p>
   <p id="mixed">من از React و Node.js استفاده می‌کنم.</p>
+  <p id="enFirst">React یک کتابخانهٔ جاوااسکریپت است.</p>
   <p id="en">Hello world</p>
-  <li id="liFa">یک مورد فهرست فارسی</li>
+  <p id="enWithFa">The Persian word سلام means hello.</p>
+  <p id="siteAuto" dir="auto">A site-set dir="auto" on English text.</p>
+  <ul>
+    <li id="liFa">یک مورد فهرست فارسی</li>
+    <li id="liCodeFirst"><code>useState</code> یک هوک برای مدیریت state است.</li>
+    <li id="liWithPre"><p>این دستور را اجرا کنید:</p><pre><code>npm install --save-dev typescript eslint prettier jest ts-node nodemon</code></pre></li>
+  </ul>
   <blockquote id="bqEn">A plain English quote.</blockquote>
   <pre id="pre"><code>const x = 1; // یک نظر فارسی داخل کد</code></pre>
-  <p id="inlineCode">من از <code>useState</code> استفاده می‌کنم.</p>
-  <div contenteditable="true" id="editor"><p>تایپ فارسی</p></div>
+  <p id="inlineCode">برای این کار از <code>useState()</code> و <code>--force</code> استفاده کنید.</p>
+  <div id="stream"></div>
+  <div contenteditable="true" id="editor"><p>React</p></div>
+  <textarea id="ta"></textarea>
 
   <hr />
   <div id="results"></div>
 
+  <script>
+    // Stand-in for ProseMirror (Claude's and Grok's input box): it redraws any node inside
+    // the editor whose attributes change, and ignores changes to its own root.
+    let redraws = 0;
+    const editor = document.getElementById("editor");
+    new MutationObserver((records) => {
+      for (const r of records) {
+        if (r.target === editor || !r.target.isConnected) continue;
+        const fresh = document.createElement(r.target.tagName);
+        fresh.textContent = r.target.textContent;
+        r.target.replaceWith(fresh);
+        redraws++;
+      }
+    }).observe(editor, { attributes: true, subtree: true });
+  </script>
   <!-- content.js runs applyDir(document.body) on load, so the static DOM
        above is already tagged by the time the assertions below run. -->
   <script src="content.js"></script>
@@ -35,16 +59,63 @@
       (cond ? console.log : console.error)((cond ? "PASS" : "FAIL") + ": " + name);
     }
     const $ = (id) => document.getElementById(id);
+    const dirOf = (el) => getComputedStyle(typeof el === "string" ? $(el) : el).direction;
+    const frames = (n) => new Promise((done) => {
+      const tick = () => (--n ? requestAnimationFrame(tick) : done());
+      requestAnimationFrame(tick);
+    });
+    // Left edge of the i-th character of an element's text, as rendered.
+    function xAt(el, i) {
+      const range = document.createRange();
+      range.setStart(el.firstChild, i);
+      range.setEnd(el.firstChild, i + 1);
+      return range.getBoundingClientRect().left;
+    }
 
-    assert("Persian paragraph tagged", $("fa").dir === "auto");
-    assert("Mixed Persian/English paragraph tagged", $("mixed").dir === "auto");
-    assert("Persian list item tagged", $("liFa").dir === "auto");
-    assert("Paragraph with inline code tagged", $("inlineCode").dir === "auto");
-    assert("English paragraph NOT tagged", $("en").dir !== "auto");
-    assert("English blockquote NOT tagged", $("bqEn").dir !== "auto");
-    assert("Code block left untouched", $("pre").dir !== "auto");
-    assert("Inline <code> not direction-changed", $("inlineCode").querySelector("code").dir !== "auto");
-    assert("Input editor tagged dir=auto", $("editor").dir === "auto");
+    (async () => {
+      assert("Persian paragraph is RTL", dirOf("fa") === "rtl");
+      assert("Mixed Persian/English paragraph is RTL", dirOf("mixed") === "rtl");
+      assert("Persian paragraph starting with an English word is RTL", dirOf("enFirst") === "rtl");
+      assert("Persian list item is RTL", dirOf("liFa") === "rtl");
+      assert("List item starting with inline code is RTL", dirOf("liCodeFirst") === "rtl");
+      assert("List item with a long code block is still RTL", dirOf("liWithPre") === "rtl");
+      assert("English paragraph untouched", !$("en").hasAttribute("dir"));
+      assert("English blockquote untouched", !$("bqEn").hasAttribute("dir"));
+      assert("English sentence with one Persian word stays LTR", dirOf("enWithFa") === "ltr");
+      assert("A dir the site set itself is kept", $("siteAuto").getAttribute("dir") === "auto");
+      assert("Code blocks stay LTR, even inside an RTL list item",
+        !$("pre").hasAttribute("dir") && dirOf("pre") === "ltr" && dirOf($("liWithPre").querySelector("pre")) === "ltr");
+      assert("Paragraph with inline code is RTL", dirOf("inlineCode") === "rtl");
+      const [useState, force] = $("inlineCode").querySelectorAll("code");
+      assert("Inline code `useState()` keeps its () on the right", xAt(useState, 8) > xAt(useState, 0));
+      assert("Inline code `--force` keeps its -- on the left", xAt(force, 0) < xAt(force, 2));
+
+      // Streaming: the <p> first renders with no RTL text, then Persian streams
+      // into an inline <strong> (a text change the <p> itself never sees).
+      const p = document.createElement("p");
+      const strong = document.createElement("strong");
+      strong.textContent = " ";
+      p.append(strong);
+      $("stream").append(p);
+      await frames(3);
+      strong.firstChild.data += "نکتهٔ مهم: این متن فارسی است";
+
+      // Typing: Persian after an English first word in the input box.
+      editor.querySelector("p").firstChild.data += " رو چطوری نصب کنم؟";
+      // Same in a <textarea> (ChatGPT): typing fires `input`, not a DOM mutation.
+      $("ta").value = "React رو چطوری نصب کنم؟";
+      $("ta").dispatchEvent(new Event("input", { bubbles: true }));
+      await frames(10);
+
+      assert("Persian streamed into an inline <strong> makes its paragraph RTL", dirOf(p) === "rtl");
+      assert("Input box typed \"React رو چطوری نصب کنم؟\" is RTL", dirOf(editor.querySelector("p")) === "rtl");
+      assert("Input box: nothing inside it touched or redrawn (no ProseMirror loop)",
+        redraws === 0 && !editor.querySelector("[dir]"));
+      assert("Textarea typed \"React رو چطوری نصب کنم؟\" is RTL", dirOf("ta") === "rtl");
+      $("ta").value = "Hello";
+      $("ta").dispatchEvent(new Event("input", { bubbles: true }));
+      assert("Textarea switched to English drops the dir we set", !$("ta").hasAttribute("dir"));
+    })();
   </script>
 </body>
 </html>

@@ -1,15 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "Claude RTL Fix (Persian / Arabic)",
-  "version": "1.0.0",
-  "description": "Fixes right-to-left rendering of Persian/Arabic text in the Claude web interface (messages, responses, and input box).",
+  "name": "Claude RTL: Persian/Arabic fix for Claude, ChatGPT & Grok",
+  "version": "1.1.0",
+  "description": "Fixes right-to-left rendering of Persian/Arabic text in Claude, ChatGPT and Grok (messages, responses, and input box).",
   "content_scripts": [
     {
       "matches": [
         "https://claude.ai/*",
         "https://*.claude.ai/*",
         "https://claude.com/*",
-        "https://*.claude.com/*"
+        "https://*.claude.com/*",
+        "https://chatgpt.com/*",
+        "https://grok.com/*"
       ],
       "js": ["content.js"],
       "css": ["styles.css"],
